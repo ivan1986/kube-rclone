@@ -17,20 +17,6 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      initContainers:
-      - name: {{ .Chart.Name }}-config
-        image: "{{ .Values.images.initContainer.repository }}:{{ .Values.images.initContainer.tag }}"
-        command:
-          - cp
-        args:
-          - -v
-          - /in/rclone.conf
-          - /out/rclone.conf
-        volumeMounts:
-        - name: config-data
-          mountPath: /in
-        - name: config
-          mountPath: /out
       terminationGracePeriodSeconds: 120
       containers:
       - name: {{ .Chart.Name }}-rclone
@@ -45,6 +31,7 @@ spec:
         {{- if .Values.rclone.readOnly }}
           - --read-only
         {{ end }}
+          - --cache-dir=/var/lib/rclone
         {{- range .Values.rclone.additionalArgs }}
           - {{ . }}
         {{- end }}
@@ -60,7 +47,7 @@ spec:
         resources:
 {{- toYaml .Values.resources | nindent 10 }}
         volumeMounts:
-        - name: config
+        - name: config-data
           mountPath: /etc/rclone
         - name: data
           mountPath: /var/lib/rclone

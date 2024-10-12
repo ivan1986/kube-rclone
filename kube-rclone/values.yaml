@@ -2,12 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 images:
-  initContainer:
-    repository: busybox
-    tag: latest
   container:
-    repository: quay.io/simplyzee/kube-rclone
-    tag: v1.53.1
+    repository: rclone/rclone
+    tag: latest
   pullPolicy: IfNotPresent
 
 # imagePullSecrets:
@@ -22,14 +19,18 @@ rclone:
   # additional arguments for customising rclone
   # mount options can be found here - https://rclone.org/commands/rclone_mount/#options
   additionalArgs:
+    - --umask=000
+    - --vfs-cache-mode=writes
+    - --vfs-cache-min-free-space=5G
     # - --buffer-size=1G
     # - --dir-cache-time=72h
     # - --drive-chunk-size=256M
-    # - --fast-list
     # - --log-level=INFO
     # - --vfs-read-chunk-size=128M
     # - --vfs-read-chunk-size-limit=off
-    # - --drive-acknowledge-abuse=true
+  config: |
+    [gcache]
+    You can use this config to mount Google Drive
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

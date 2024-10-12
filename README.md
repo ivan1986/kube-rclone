@@ -12,15 +12,12 @@ This can be created by running `rclone config` which will take you through an in
 ## Setup
 The setup guide will help you get rclone running as a Daemonset on Kubernetes.
 
-1. Add the contents of the `rclone.conf` file into `files/rclone.conf`
-2. Deploy the kube-rclone chart with the correct remote and path defined from the `rclone.conf` file
+1. Add the contents of the `rclone.conf` file into values `rclone.config`
+2. Configure `remote`, `path` and `additionalArgs` in `values.yaml`
+2. Deploy the kube-rclone chart
 
 ```bash
-> helm install ./kube-rclone --name rclone \
-    --namespace rclone \
-    --set rclone.remote=[insert remote to mount here] \
-    --set rclone.path=[insert mount path for remote] \
-    --set rclone.readOnly=true
+> helm install -f values.yaml ./kube-rclone --name rclone \
 ```
 
 This will deploy a Daemonset across the Kubernetes cluster that will run rclone with the mounted remote i.e Google Drive on the `hostPath` of the node which can be used with other services.
